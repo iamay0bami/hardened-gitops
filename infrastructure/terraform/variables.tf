@@ -1,25 +1,27 @@
-variable "project_id" {
-  description = "GCP project ID"
+variable "cluster_name" {
+  description = "Name of the Kind cluster"
   type        = string
-}
-
-variable "region" {
-  description = "Primary GCP region"
-  type        = string
-  default     = "us-central1"
+  default     = "realworld-gitops"
 }
 
 variable "environment" {
-  description = "Deployment environment (staging or production)"
+  description = "Deployment environment"
   type        = string
+  default     = "staging"
   validation {
     condition     = contains(["staging", "production"], var.environment)
-    error_message = "Environment must be 'staging' or 'production'."
+    error_message = "Must be staging or production."
   }
 }
 
-variable "cluster_name" {
-  description = "Name of the GKE cluster"
+variable "argocd_version" {
+  description = "ArgoCD Helm chart version"
   type        = string
-  default     = "realworld-cluster"
+  default     = "6.7.3"
+}
+
+variable "vault_version" {
+  description = "Vault Helm chart version"
+  type        = string
+  default     = "0.27.0"
 }

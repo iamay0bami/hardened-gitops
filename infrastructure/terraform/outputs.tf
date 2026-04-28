@@ -1,7 +1,14 @@
-output "gke_cluster_name" {
-  value = module.gke.cluster_name
+output "cluster_name" {
+  description = "Kind cluster name"
+  value       = kind_cluster.main.name
+}
+
+output "kubeconfig_path" {
+  description = "Path to the generated kubeconfig"
+  value       = kind_cluster.main.kubeconfig_path
 }
 
 output "registry_url" {
-  value = "${var.region}-docker.pkg.dev/${var.project_id}/realworld-app-${var.environment}"
+  description = "GitHub Container Registry URL"
+  value       = "ghcr.io/iamay0bami/realworld-app"
 }
