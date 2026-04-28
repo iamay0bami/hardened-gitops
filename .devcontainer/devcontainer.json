@@ -1,0 +1,56 @@
+{
+  "name": "Hardened GitOps Pipeline",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": "true"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "none"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest"
+    }
+  },
+
+  "onCreateCommand": "bash .devcontainer/install-tools.sh",
+
+  "forwardPorts": [
+    8080,
+    8443,
+    9090,
+    8200
+  ],
+
+  "portsAttributes": {
+    "9090": {
+      "label": "ArgoCD UI",
+      "onAutoForward": "notify"
+    },
+    "8200": {
+      "label": "Vault UI",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "App",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions"
+      ]
+    }
+  },
+
+  "remoteUser": "vscode"
+}
