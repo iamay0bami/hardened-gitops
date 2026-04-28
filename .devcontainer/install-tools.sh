@@ -15,14 +15,16 @@ echo ">>> Installing Syft (SBOM generator)..."
 curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh \
   | sudo sh -s -- -b /usr/local/bin
 
-echo ">>> Installing Checkov (IaC scanner)..."
-pip3 install checkov --quiet --user
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+echo ">>> Installing Python and Checkov (IaC scanner)..."
+sudo apt-get update -qq
+sudo apt-get install -y -qq python3 python3-pip
+sudo pip3 install checkov --quiet
 
 echo ">>> Verifying all tools..."
 kind version
 trivy --version
 syft --version
+checkov --version
 terraform version
 helm version --short
 kubectl version --client
