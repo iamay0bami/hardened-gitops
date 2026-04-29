@@ -24,9 +24,6 @@ spec:
     namespace: production
 
   syncPolicy:
-    # NO automated block = MANUAL SYNC ONLY
-    # A human must click Sync in ArgoCD UI or run argocd app sync
-    # This protects production from accidental automated deployments
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

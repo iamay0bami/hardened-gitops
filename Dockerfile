@@ -1,4 +1,4 @@
-# ── Stage 1: Build ────────────────────────────────────────────────────────────
+# Stage 1: Build 
 FROM eclipse-temurin:17-jdk-jammy AS builder
 
 WORKDIR /workspace/app
@@ -8,7 +8,7 @@ COPY app/gradle gradle
 COPY app/build.gradle .
 COPY app/settings.gradle* ./
 
-# Fix execute permission — lost when copied from Windows git repo
+# Fix execute permission on gradlew
 RUN chmod +x gradlew
 
 # Download dependencies as a separate layer
@@ -18,7 +18,7 @@ RUN ./gradlew dependencies --no-daemon || true
 COPY app/src src
 RUN ./gradlew bootJar --no-daemon -x test
 
-# ── Stage 2: Runtime ──────────────────────────────────────────────────────────
+# Stage 2: Runtime 
 FROM eclipse-temurin:17-jre-jammy AS runtime
 
 RUN groupadd --gid 1001 appgroup && \

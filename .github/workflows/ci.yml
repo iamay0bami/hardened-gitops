@@ -12,10 +12,9 @@ env:
 
 jobs:
 
-# ══════════════════════════════════════════════════════════════════════════════
-# GATE 1: Trivy — scans filesystem and Dockerfile BEFORE build
+
+# GATE 1: Trivy scans filesystem and Dockerfile BEFORE build
 # This gate BLOCKS the pipeline on CRITICAL findings
-# ══════════════════════════════════════════════════════════════════════════════
   trivy-scan:
     name: "Gate 1: Trivy Security Scan"
     runs-on: ubuntu-latest
@@ -53,10 +52,8 @@ jobs:
           exit-code: 1
           severity: CRITICAL,HIGH
 
-# ══════════════════════════════════════════════════════════════════════════════
 # GATE 2: Checkov — scans Terraform for misconfigurations
 # BLOCKS on real cloud misconfigs (open ports, unencrypted storage)
-# ══════════════════════════════════════════════════════════════════════════════
   checkov-scan:
     name: "Gate 2: Checkov IaC Scan"
     runs-on: ubuntu-latest
@@ -84,10 +81,8 @@ jobs:
           sarif_file: checkov-results.sarif
           category: checkov-terraform
 
-# ══════════════════════════════════════════════════════════════════════════════
 # GATE 3: Syft — generates Software Bill of Materials
 # Documents every dependency for supply chain visibility
-# ══════════════════════════════════════════════════════════════════════════════
   sbom-generate:
     name: "Gate 3: Generate SBOM"
     runs-on: ubuntu-latest
@@ -127,10 +122,8 @@ jobs:
               print(f'  - {p.get(\"name\", \"unknown\")} {p.get(\"versionInfo\", \"\")}')
           "
 
-# ══════════════════════════════════════════════════════════════════════════════
 # BUILD: Only runs if all three gates pass
 # Builds and pushes to GitHub Container Registry
-# ══════════════════════════════════════════════════════════════════════════════
   build-and-push:
     name: "Build and Push Image"
     runs-on: ubuntu-latest

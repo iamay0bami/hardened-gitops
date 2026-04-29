@@ -1,4 +1,4 @@
-# ── Kind cluster ──────────────────────────────────────────────────────────────
+# Kind cluster 
 resource "kind_cluster" "main" {
   name           = var.cluster_name
   wait_for_ready = true
@@ -39,7 +39,7 @@ resource "kind_cluster" "main" {
   }
 }
 
-# ── Providers wired to the cluster ────────────────────────────────────────────
+# Providers wired to the cluster 
 provider "kubernetes" {
   host                   = kind_cluster.main.endpoint
   client_certificate     = kind_cluster.main.client_certificate
@@ -56,7 +56,7 @@ provider "helm" {
   }
 }
 
-# ── Namespaces ────────────────────────────────────────────────────────────────
+# Namespaces 
 locals {
   namespaces = [
     "argocd",
@@ -82,7 +82,7 @@ resource "kubernetes_namespace" "namespaces" {
   depends_on = [kind_cluster.main]
 }
 
-# ── ArgoCD ────────────────────────────────────────────────────────────────────
+# ArgoCD 
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -108,7 +108,7 @@ resource "helm_release" "argocd" {
   depends_on = [kubernetes_namespace.namespaces]
 }
 
-# ── HashiCorp Vault (dev mode — free, no storage needed) ─────────────────────
+# HashiCorp Vault (dev mode — free, no storage needed) 
 resource "helm_release" "vault" {
   name       = "vault"
   repository = "https://helm.releases.hashicorp.com"
@@ -142,7 +142,7 @@ resource "helm_release" "vault" {
   depends_on = [kubernetes_namespace.namespaces]
 }
 
-# ── External Secrets Operator ─────────────────────────────────────────────────
+# External Secrets Operator 
 resource "helm_release" "external_secrets" {
   name       = "external-secrets"
   repository = "https://charts.external-secrets.io"
@@ -169,7 +169,7 @@ resource "helm_release" "external_secrets" {
   ]
 }
 
-# ── Kyverno policy engine ─────────────────────────────────────────────────────
+# Kyverno policy engine 
 resource "helm_release" "kyverno" {
   name       = "kyverno"
   repository = "https://kyverno.github.io/kyverno/"

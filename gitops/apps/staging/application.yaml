@@ -5,7 +5,6 @@ metadata:
   namespace: argocd
   labels:
     environment: staging
-  # Finalizer ensures ArgoCD cleans up resources when the app is deleted
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -25,7 +24,7 @@ spec:
     namespace: staging
 
   syncPolicy:
-    # AUTO-SYNC: ArgoCD watches the repo and deploys automatically
+    # AUTO-SYNC which ensuresArgoCD watches the repo and deploys automatically
     # This means every push to main goes straight to staging
     automated:
       prune: true      # delete resources removed from Git

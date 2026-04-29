@@ -17,7 +17,7 @@ resources:
     cpu: "500m"
     memory: "512Mi"
 
-# Security context — enforced by Kyverno policy
+# Security context which isenforced by Kyverno policy
 securityContext:
   runAsNonRoot: true
   runAsUser: 1001
