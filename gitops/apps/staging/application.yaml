@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: realworld-staging
+  namespace: argocd
+  labels:
+    environment: staging
+  # Finalizer ensures ArgoCD cleans up resources when the app is deleted
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/iamay0bami/hardened-gitops
+    targetRevision: main
+    path: gitops/helm/realworld-app
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-staging.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+
+  syncPolicy:
+    # AUTO-SYNC: ArgoCD watches the repo and deploys automatically
+    # This means every push to main goes straight to staging
+    automated:
+      prune: true      # delete resources removed from Git
+      selfHeal: true   # revert manual changes made directly to the cluster
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
