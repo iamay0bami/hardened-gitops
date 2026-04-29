@@ -1,0 +1,38 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: block-privilege-escalation
+  annotations:
+    policies.kyverno.io/title: Block Privilege Escalation
+    policies.kyverno.io/category: Pod Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Privilege escalation allows a process to gain more permissions than
+      its parent process. This policy blocks any pod that sets
+      allowPrivilegeEscalation to true, which is a hard security requirement
+      for this pipeline. All containers must explicitly set
+      allowPrivilegeEscalation: false.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: block-privilege-escalation
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - staging
+                - production
+      validate:
+        message: >-
+          Privilege escalation is not allowed in this cluster.
+          Set allowPrivilegeEscalation: false in your container
+          securityContext to fix this.
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  allowPrivilegeEscalation: "false"
